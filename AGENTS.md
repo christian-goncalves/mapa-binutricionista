@@ -10,51 +10,47 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Instruções do repositório: Mapa do Automático
 
-## Objetivo
+## Produto e contrato
 
-Este repositório contém uma reprodução em Next.js do fluxo interativo “Mapa do Automático”, da Bianca Gonçalves. A página apresenta cinco perguntas sobre comportamento alimentar, coleta respostas no navegador e exibe uma devolutiva educativa com o padrão mais frequente.
+O Mapa do Automático é uma experiência educativa da Bianca Gonçalves. Preserve `ESPECIFICACAO.md` como contrato e `PLANO-EXECUCAO.md` como histórico executivo.
 
-## Estado atual e limites
+- O fluxo em `/` tem hero, cinco perguntas, transição, formulário e resultado na mesma rota React. Não criar URLs por pergunta.
+- Preservar as perguntas, os cards e `deriveCategory` em `mapa-data.ts`; respostas e resultado existem somente em memória no navegador.
+- O resultado descreve uma influência possível, nunca diagnóstico, prescrição ou avaliação clínica.
+- Os campos obrigatórios são `nome`, `email`, `whatsapp` e consentimento explícito para contato posterior sobre o resultado. Não há autorização para marketing.
+- Não criar envio automático de e-mail, WhatsApp, campanhas, IA ou persistência de respostas, categorias ou resultado.
 
-- `/` contém o fluxo completo: abertura, cinco perguntas, captura local e resultado.
-- `/privacidade` e `/termos` são páginas estáticas de apoio.
-- As etapas do mapa são estados React; não devem ser convertidas em rotas sem uma necessidade funcional clara.
-- `mapa-data.ts` é a fonte das perguntas, categorias, textos e regra local de desempate.
-- Não existe, neste clone, persistência em Supabase, envio de e-mail, integração de marketing ou geração remota de conteúdo.
-- Não tratar o resultado local como diagnóstico clínico nem afirmar que dados foram armazenados quando não houver uma integração implementada e validada.
+## Integração aprovada
 
-## Stack e comandos
+O único caminho de persistência é `Navegador -> POST /api/mapa/lead -> n8n -> Google Sheets`.
 
-- Next.js 16.3, App Router, React 19 e TypeScript strict.
-- Tailwind CSS v4 e componentes React nomeados.
-- `npm run dev` inicia o desenvolvimento.
-- `npm run lint` executa o ESLint.
-- `npm run typecheck` executa o TypeScript sem emitir arquivos.
-- `npm run build` valida e gera a saída de produção.
-- `npm start` executa a saída construída.
-- `docker compose up app --build` executa o container de produção.
+- A rota aceita e encaminha somente `timestamp`, `nome`, `email`, `whatsapp` e `consentimento_contato`.
+- O timestamp é gerado em `America/Sao_Paulo`; o WhatsApp é normalizado para o formato brasileiro com `+55`.
+- O workflow é `M6CSVtIxSonM5UmJ`, está publicado e ativo por autorização explícita e usa header secreto `key`. Não o desative, publique nova versão ou altere sua credencial sem nova autorização.
+- `N8N_WEBHOOK_URL` e `N8N_WEBHOOK_SECRET` são exclusivamente server-side. Nunca usar `NEXT_PUBLIC_`, registrar valores no Git, expor em logs ou pedir o segredo em chat.
+- Se a persistência falhar, o resultado deve continuar visível sem detalhes técnicos.
+- A planilha está publicamente editável (`anyone: writer`) por decisão explícita. Não exponha seu link no navegador e trate essa permissão como risco operacional que exige revisão antes de coleta pública.
 
-## Organização do código
+## Stack e organização
 
-- `src/app/` contém as rotas públicas.
+- Next.js 16.3, App Router, React 19, TypeScript strict e Tailwind CSS v4.
+- `src/app/api/mapa/lead/route.ts` contém a validação server-side.
 - `src/components/sites/mapa-binutricionista.lovable.app-a2f84283/root-8a5edab2/` contém os componentes específicos desta reprodução.
-- `src/app/globals.css` concentra os estilos da aplicação.
-- `next.config.ts` usa `output: "standalone"` e permite `127.0.0.1` somente para o desenvolvimento local.
-- Preserve o namespace específico do site ao criar novos componentes ou assets do clone.
+- `src/app/globals.css` concentra os estilos. O badge Lovable foi removido e não deve ser recriado.
+- Preserve o namespace específico do site ao criar componentes ou assets.
 
-## Regras de alteração
+## Desenvolvimento e validação
 
-- Antes de escrever código Next.js, leia o guia correspondente em `node_modules/next/dist/docs/`.
-- Preserve o conteúdo observado da aplicação reproduzida; não invente integrações, promessas de armazenamento ou resultados clínicos.
-- Não coloque segredos, arquivos `.env`, `node_modules`, `.next`, logs, capturas do Playwright ou caches no commit.
-- Use TypeScript strict, evite `any`, mantenha componentes nomeados e prefira navegação interna com `next/link`.
-- Faça alterações pequenas e valide o fluxo afetado no navegador quando houver interação.
-- Após alterar código, rode pelo menos `npm run lint`, `npm run typecheck` e `npm run build`.
+- Antes de escrever código Next.js, leia o guia aplicável em `node_modules/next/dist/docs/`.
+- Use TypeScript strict, evite `any`, mantenha componentes nomeados e prefira `next/link` para navegação interna.
+- Após qualquer alteração funcional, execute `npm run lint`, `npm run typecheck` e `npm run build`.
+- Quando houver interface interativa, valide no navegador: abertura, cinco etapas, formulário, resultado e cenário de falha de persistência.
+- Não interrompa um servidor de desenvolvimento já existente sem autorização; use-o ou escolha outra porta.
 
-## Produção
+## Produção e Git
 
-O caminho suportado é construir com `npm ci && npm run build` e executar com `npm start`, ou usar o `Dockerfile` standalone. A persistência das respostas e o tratamento dos dados de nome/e-mail são pendências de produto e infraestrutura; qualquer implementação futura deve ser avaliada quanto a privacidade, consentimento, segurança e confirmação operacional.
-
-## Escopo do histórico de produção
-
-O histórico de publicação deve conter apenas o código, as dependências, as configurações de build/deploy e a documentação operacional do aplicativo. Configurações de agentes, capturas do navegador, pesquisa de clonagem, caches e arquivos específicos do template permanecem fora desse histórico.
+- Não fazer push, deploy, desativar ou alterar o workflow n8n ativo, nem ampliar a coleta real sem autorização explícita.
+- Configurar segredos somente no ambiente de execução, usando `.env.example` apenas como modelo.
+- Não colocar `.env*`, segredos, `node_modules`, `.next`, logs, capturas de navegador ou caches em commits.
+- O histórico de produção deve conter somente código, configuração de build/deploy e documentação operacional relevante.
+- Após editar este arquivo, execute `bash scripts/sync-agent-rules.sh` e revise as alterações geradas antes de incluí-las em um commit.

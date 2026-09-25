@@ -1,6 +1,6 @@
 # Especificação — Mapa do Automático
 
-**Status:** aprovada para implementação
+**Status:** implementada e validada localmente; workflow n8n ativo por autorização explícita
 **Versão:** 1.0
 **Data:** 25 de setembro de 2026
 **Produto:** experiência interativa da Bianca Gonçalves
@@ -277,11 +277,11 @@ Aceitar número com ou sem `+55`, com formatação comum ou somente números. No
 
 ## 9. Estado de implementação
 
-Este documento registra o contrato aprovado. No momento da criação desta especificação:
+Implementação concluída em 25 de setembro de 2026:
 
-- o clone ainda não implementa a rota Next.js;
-- o clone ainda não chama o n8n;
-- a planilha será mantida com edição pública por decisão posterior registrada. Essa escolha precisa ser considerada antes de qualquer coleta pública real;
-- a planilha ainda precisa ter as colunas de respostas e resultado removidas;
-- o texto atual do README ainda descreve o fluxo anterior de captura local;
-- a implementação deve ocorrer em etapas separadas, com validação após cada etapa.
+- a rota segura do Next.js, o formulário obrigatório e a lógica de fallback foram implementados;
+- o workflow n8n `M6CSVtIxSonM5UmJ` foi validado e está ativo por autorização explícita;
+- a planilha contém somente as cinco colunas aprovadas, no fuso `America/Sao_Paulo`;
+- a execução sintética `7916` foi removida após a validação e a execução real via formulário `7920` confirmou a integração ponta a ponta;
+- a planilha permanece pública para edição por decisão posterior registrada. Essa escolha precisa ser considerada antes de ampliar a coleta;
+- o site ainda não recebeu deploy nem push remoto.
