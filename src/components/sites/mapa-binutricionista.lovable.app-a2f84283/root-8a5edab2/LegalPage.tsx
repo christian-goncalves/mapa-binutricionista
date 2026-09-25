@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { LovableBadge } from "./LovableBadge";
 
 type LegalPageProps = {
   title: string;
@@ -18,7 +17,6 @@ export function LegalPage({ title, children }: LegalPageProps) {
           Voltar ao início
         </Link>
       </section>
-      <LovableBadge />
     </main>
   );
 }

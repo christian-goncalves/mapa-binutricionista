@@ -3,6 +3,7 @@ import { mapaPatterns, type MapaCategory } from "./mapa-data";
 type ResultSectionProps = {
   name: string;
   category: MapaCategory;
+  persistenceFailed: boolean;
 };
 
 function ResultBlock({ title, children }: { title: string; children: React.ReactNode }) {
@@ -14,14 +15,15 @@ function ResultBlock({ title, children }: { title: string; children: React.React
   );
 }
 
-export function ResultSection({ name, category }: ResultSectionProps) {
+export function ResultSection({ name, category, persistenceFailed }: ResultSectionProps) {
   const pattern = mapaPatterns[category];
 
   return (
     <>
       <section className="mapa-container mapa-fade">
         <h2 className="mapa-result-title">{name.trim()}, seu Mapa está pronto.</h2>
-        <p className="mapa-result-question">O padrão que mais apareceu nas suas respostas foi:</p>
+        {persistenceFailed ? <p className="mapa-result-status" role="status">Seu resultado está pronto. Tivemos um problema ao registrar seus dados. Tente novamente mais tarde.</p> : null}
+        <p className="mapa-result-question">O que pode estar influenciando suas escolhas:</p>
         <p className="mapa-result-pattern">{pattern.name}</p>
         <div className="mapa-result-blocks">
           <ResultBlock title="O que apareceu no seu Mapa">

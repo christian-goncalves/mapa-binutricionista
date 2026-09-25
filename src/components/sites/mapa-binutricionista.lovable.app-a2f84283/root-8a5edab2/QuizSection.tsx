@@ -4,11 +4,12 @@ type QuizSectionProps = {
   questions: MapaQuestion[];
   currentIndex: number;
   answers: Array<MapaCategory | null>;
+  isAdvancing: boolean;
   onSelect: (category: MapaCategory) => void;
   onBack: () => void;
 };
 
-export function QuizSection({ questions, currentIndex, answers, onSelect, onBack }: QuizSectionProps) {
+export function QuizSection({ questions, currentIndex, answers, isAdvancing, onSelect, onBack }: QuizSectionProps) {
   const question = questions[currentIndex];
   const selectedCategory = answers[currentIndex];
 
@@ -20,6 +21,7 @@ export function QuizSection({ questions, currentIndex, answers, onSelect, onBack
         </div>
         <span className="mapa-progress-label">{currentIndex + 1} de {questions.length}</span>
       </div>
+      <p className="mapa-quiz-guidance">Responda pensando no que acontece com você.</p>
       <div className="mapa-fade" key={currentIndex}>
         <h2 className="mapa-question-title">{question.title}</h2>
         {question.support ? <p className="mapa-question-support">{question.support}</p> : null}
@@ -32,6 +34,7 @@ export function QuizSection({ questions, currentIndex, answers, onSelect, onBack
                 type="button"
                 aria-pressed={selected}
                 className={`mapa-option-card${selected ? " is-selected" : ""}`}
+                disabled={isAdvancing}
                 onClick={() => onSelect(option.category)}
               >
                 {option.text}
